@@ -1,7 +1,37 @@
-#include "allocator.h"
+#ifndef _LN_STL_ALLOCTOR_H_
+#define _LN_STL_ALLOCTOR_H_
 
+#include <iostream>
 namespace lnstl
 {
+    template <class T>
+    class allocator
+    {
+    public:
+        typedef T value_type;
+        typedef T *pointer;
+        typedef const T *const_pointer;
+        typedef T &reference;
+        typedef const T &const_reference;
+        typedef size_t size_type;
+        typedef ptrdiff_t difference_type;
+
+    public:
+        static pointer allocate();
+        static pointer allocate(size_type n);
+
+        static void deallocate(pointer ptr);
+        static void deallocate(pointer ptr, size_type);
+
+        static void construct(pointer ptr);
+        static void construct(pointer ptr, const T &value);
+
+        static void destroy(pointer ptr);
+
+        pointer address(reference ref);
+        const_pointer const_address(const_reference c_ref);
+        size_type max_size() const;
+    };
     template <class T>
     inline T *_allocate()
     {
@@ -27,8 +57,6 @@ namespace lnstl
         }
         return tmp;
     }
-
-    
 
     template <class T>
     inline void _deallocate(T *ptr)
@@ -58,24 +86,16 @@ namespace lnstl
         ptr->~T();
     }
 
-    // template <class T>
-    // typename allocator<T>::pointer allocator<T>::allocate()
-    // {
-    //     return _allocate();
-    // }
+    template <class T>
+    typename allocator<T>::pointer allocator<T>::allocate()
+    {
+        return _allocate<T>();
+    }
 
     template <class T>
     typename allocator<T>::pointer allocator<T>::allocate(size_type n)
     {
-        // return _allocate((difference_type)n);
-        std::set_new_handler(0);
-        T *tmp = static_cast<T *>(::operator new((size_t)(n * sizeof(T))));
-        if (tmp == 0)
-        {
-            std::cerr << "Out of memory" << std::endl;
-            exit(1);
-        }
-        return tmp;
+        return _allocate<T>((difference_type)n);
     }
 
     template <class T>
@@ -99,7 +119,7 @@ namespace lnstl
     template <class T>
     void allocator<T>::construct(allocator<T>::pointer ptr, const T &value)
     {
-        _construct(ptr);
+        _construct(ptr, value);
     }
 
     template <class T>
@@ -127,3 +147,5 @@ namespace lnstl
     }
 
 }
+
+#endif
