@@ -1,6 +1,8 @@
 #ifndef _LN_STL_ALLOCTOR_H_
 #define _LN_STL_ALLOCTOR_H_
 
+
+// 此配置器使用new、delete配置空间和构造对象
 #include <iostream>
 namespace lnstl
 {
@@ -21,7 +23,7 @@ namespace lnstl
         static pointer allocate(size_type n);
 
         static void deallocate(pointer ptr);
-        static void deallocate(pointer ptr, size_type);
+        static void deallocate(pointer ptr, size_t);
 
         static void construct(pointer ptr);
         static void construct(pointer ptr, const T &value);
@@ -105,7 +107,7 @@ namespace lnstl
     }
 
     template <class T>
-    void allocator<T>::deallocate(allocator<T>::pointer ptr, size_type)
+    void allocator<T>::deallocate(allocator<T>::pointer ptr, size_t)
     {
         _deallocate(ptr);
     }
